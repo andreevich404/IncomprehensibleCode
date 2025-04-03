@@ -1,179 +1,220 @@
-п»ї#include "Menu.h"
+#include "Menu.h"
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include "Circle.h"
+#include "Rectangle.h"
+#include "Fish.h"
+#include "Bird.h"
+#include "FlyingBird.h"
+#include "Student.h"
+#include "Teacher.h"
+#include "Summator.h"
+#include "SquareSummator.h"
+#include "CubeSummator.h"
 
-// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
-Menu::Menu() {}
+using namespace std;
 
-// РњРµС‚РѕРґ РґР»СЏ РѕС‡РёСЃС‚РєРё РєРѕРЅСЃРѕР»Рё
-void Menu::ClearConsole() {
-#ifdef _WIN32
-    system("cls"); // Р”Р»СЏ Windows
-#else
-    system("clear"); // Р”Р»СЏ Linux/MacOS
-#endif
+// Инициализация меню с заданиями
+void Menu::initialize() {
+    // Добавляем все задания в меню
+    addItem("1. Геометрические фигуры", [this]() { task1(); });
+    addItem("2. Иерархия животных", [this]() { task2(); });
+    addItem("3. Студенты и преподаватели", [this]() { task3(); });
+    addItem("4. Сумматоры последовательностей", [this]() { task4(); });
 }
 
-// РњРµС‚РѕРґ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РјРµРЅСЋ
-void Menu::ShowMenu() {
-    ClearConsole();
-    std::cout << "РњРµРЅСЋ:" << std::endl;
-    std::cout << "1. Р—Р°РґР°РЅРёРµ 1 (Bell)" << std::endl;
-    std::cout << "2. Р—Р°РґР°РЅРёРµ 2 (OddEvenSeparator)" << std::endl;
-    std::cout << "3. Р—Р°РґР°РЅРёРµ 3 (Table)" << std::endl;
-    std::cout << "4. Р—Р°РґР°РЅРёРµ 4 (Complex)" << std::endl;
-    std::cout << "5. Р—Р°РґР°РЅРёРµ 5 (Stock)" << std::endl;
-    std::cout << "0. Р’С‹С…РѕРґ" << std::endl;
-    std::cout << "Р’С‹Р±РµСЂРёС‚Рµ Р·Р°РґР°РЅРёРµ: ";
+// Добавление пункта в меню
+void Menu::addItem(const string& name, function<void()> action) {
+    MenuItem item;
+    item.name = name;
+    item.action = action;
+    items.push_back(item);
 }
 
-// РњРµС‚РѕРґ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ Р·Р°РґР°РЅРёСЏ
-void Menu::RunTask(int choice) {
-    ClearConsole();
-    switch (choice) {
-    case 1:
-        TaskBell();
-        break;
-    case 2:
-        TaskOddEvenSeparator();
-        break;
-    case 3:
-        TaskTable();
-        break;
-    case 4:
-        TaskComplex();
-        break;
-    case 5:
-        TaskStock();
-        break;
-    case 0:
-        std::cout << "Р’С‹С…РѕРґ РёР· РїСЂРѕРіСЂР°РјРјС‹." << std::endl;
-        break;
-    default:
-        std::cout << "РќРµРІРµСЂРЅС‹Р№ РІС‹Р±РѕСЂ. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°." << std::endl;
-        break;
-    }
-    if (choice != 0) {
-        std::cout << "РќР°Р¶РјРёС‚Рµ Enter РґР»СЏ РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ...";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cin.get();
-    }
-}
+// Запуск меню
+void Menu::run() {
+    while (true) {
+        cout << "\n=== Главное меню ===" << endl;
 
-// РњРµС‚РѕРґ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР»Р°СЃСЃРѕРј Bell
-void Menu::TaskBell() {
-    std::cout << "Р—Р°РґР°РЅРёРµ 1: Р РµР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР° Bell." << std::endl;
-    std::cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РІСѓРєРѕРІ: ";
-    int count;
-    std::cin >> count;
+        // Выводим все пункты меню
+        for (size_t i = 0; i < items.size(); i++) {
+            cout << items[i].name << endl;
+        }
+        cout << "0. Выход" << endl;
 
-    if (count <= 0) {
-        std::cerr << "РћС€РёР±РєР°: РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РІСѓРєРѕРІ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј С‡РёСЃР»РѕРј." << std::endl;
-        return;
-    }
+        int choice;
+        cout << "Ваш выбор: ";
+        cin >> choice;
 
-    Bell bell;
-    for (int i = 0; i < count; ++i) {
-        bell.sound();
-    }
-}
+        if (choice == 0) {
+            break; // Выход из программы
+        }
 
-// РњРµС‚РѕРґ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР»Р°СЃСЃРѕРј OddEvenSeparator
-void Menu::TaskOddEvenSeparator() {
-    std::cout << "Р—Р°РґР°РЅРёРµ 2: Р РµР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР° OddEvenSeparator." << std::endl;
-    std::cout << "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Р° С‡РµСЂРµР· РїСЂРѕР±РµР» (РґР»СЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РІРІРѕРґР° РІРІРµРґРёС‚Рµ Р»СЋР±РѕР№ РЅРµС‡РёСЃР»РѕРІРѕР№ СЃРёРјРІРѕР»): ";
-
-    OddEvenSeparator separator;
-    int number;
-    while (std::cin >> number) {
-        separator.add_number(number);
-    }
-
-    // РћС‡РёСЃС‚РєР° РїРѕС‚РѕРєР° РІРІРѕРґР°
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    separator.even();
-    separator.odd();
-}
-
-// РњРµС‚РѕРґ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР»Р°СЃСЃРѕРј Table
-void Menu::TaskTable() {
-    std::cout << "Р—Р°РґР°РЅРёРµ 3: Р РµР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР° Table." << std::endl;
-    std::cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє Рё СЃС‚РѕР»Р±С†РѕРІ: ";
-    int rows, cols;
-    std::cin >> rows >> cols;
-
-    if (rows <= 0 || cols <= 0) {
-        std::cerr << "РћС€РёР±РєР°: РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє Рё СЃС‚РѕР»Р±С†РѕРІ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј С‡РёСЃР»РѕРј." << std::endl;
-        return;
-    }
-
-    Table table(rows, cols);
-
-    // Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†Сѓ Р·РЅР°С‡РµРЅРёСЏРјРё
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            table.set_value(i, j, i * cols + j + 1); // РџСЂРёРјРµСЂ Р·Р°РїРѕР»РЅРµРЅРёСЏ
+        // Проверяем правильность выбора
+        if (choice > 0 && choice <= (int)items.size()) {
+            items[choice - 1].action(); // Запускаем выбранное задание
+        }
+        else {
+            cout << "Ошибка! Попробуйте снова." << endl;
         }
     }
-
-    // Р’С‹РІРѕРґРёРј С‚Р°Р±Р»РёС†Сѓ
-    std::cout << "РўР°Р±Р»РёС†Р°:" << std::endl;
-    table.print();
-
-    // Р’С‹РІРѕРґРёРј СЃСЂРµРґРЅРµРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРѕРµ
-    std::cout << "РЎСЂРµРґРЅРµРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРѕРµ: " << table.average() << std::endl;
 }
 
-// РњРµС‚РѕРґ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР»Р°СЃСЃРѕРј Complex
-void Menu::TaskComplex() {
-    std::cout << "Р—Р°РґР°РЅРёРµ 4: Р РµР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР° Complex." << std::endl;
-    std::cout << "Р’РІРµРґРёС‚Рµ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅСѓСЋ Рё РјРЅРёРјСѓСЋ С‡Р°СЃС‚Рё РїРµСЂРІРѕРіРѕ РєРѕРјРїР»РµРєСЃРЅРѕРіРѕ С‡РёСЃР»Р°: ";
-    double re1, im1;
-    std::cin >> re1 >> im1;
-    Complex z1(re1, im1);
+// Задание 1: Геометрические фигуры
+void Menu::task1() {
+    while (true) {
+        cout << "\n=== Геометрические фигуры ===" << endl;
+        cout << "1. Круг" << endl;
+        cout << "2. Прямоугольник" << endl;
+        cout << "0. Назад" << endl;
 
-    std::cout << "Р’РІРµРґРёС‚Рµ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅСѓСЋ Рё РјРЅРёРјСѓСЋ С‡Р°СЃС‚Рё РІС‚РѕСЂРѕРіРѕ РєРѕРјРїР»РµРєСЃРЅРѕРіРѕ С‡РёСЃР»Р°: ";
-    double re2, im2;
-    std::cin >> re2 >> im2;
-    Complex z2(re2, im2);
+        int choice;
+        cout << "Выберите фигуру: ";
+        cin >> choice;
 
-    // Р’С‹РІРѕРґ С‡РёСЃРµР»
-    std::cout << "РџРµСЂРІРѕРµ С‡РёСЃР»Рѕ: ";
-    z1.Print();
-    std::cout << "Р’С‚РѕСЂРѕРµ С‡РёСЃР»Рѕ: ";
-    z2.Print();
+        if (choice == 0) break;
 
-    // РђСЂРёС„РјРµС‚РёС‡РµСЃРєРёРµ РѕРїРµСЂР°С†РёРё
-    Complex sum = z1.Add(z2);
-    std::cout << "РЎСѓРјРјР°: ";
-    sum.Print();
-
-    Complex diff = z1.Sub(z2);
-    std::cout << "Р Р°Р·РЅРѕСЃС‚СЊ: ";
-    diff.Print();
-
-    Complex prod = z1.Mult(z2);
-    std::cout << "РџСЂРѕРёР·РІРµРґРµРЅРёРµ: ";
-    prod.Print();
-
-    Complex quot = z1.Div(z2);
-    std::cout << "Р§Р°СЃС‚РЅРѕРµ: ";
-    quot.Print();
+        switch (choice) {
+        case 1: task1_circle(); break;
+        case 2: task1_rectangle(); break;
+        default: cout << "Ошибка выбора!" << endl;
+        }
+    }
 }
 
-// РњРµС‚РѕРґ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РєР»Р°СЃСЃРѕРј Stock
-void Menu::TaskStock() {
-    std::cout << "Р—Р°РґР°РЅРёРµ 5: Р РµР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР° Stock." << std::endl;
-    Stock stock;
+void Menu::task1_circle() {
+    cout << "\n--- Круг ---" << endl;
+    double radius;
+    cout << "Введите радиус: ";
+    cin >> radius;
 
-    // Р”РѕР±Р°РІР»СЏРµРј РєРѕСЂРѕР±РєРё РЅР° СЃРєР»Р°Рґ
-    stock.Add(10, 5);  // РљРѕСЂРѕР±РєР° 0: РІРµСЃ=10, РѕР±СЉРµРј=5
-    stock.Add(20, 3);  // РљРѕСЂРѕР±РєР° 1: РІРµСЃ=20, РѕР±СЉРµРј=3
-    stock.Add(15, 8);  // РљРѕСЂРѕР±РєР° 2: РІРµСЃ=15, РѕР±СЉРµРј=8
+    Circle circle(radius);
+    circle.Show();
 
-    // РџРѕР»СѓС‡Р°РµРј РєРѕСЂРѕР±РєСѓ РїРѕ РјРёРЅРёРјР°Р»СЊРЅРѕР№ РіСЂСѓР·РѕРїРѕРґСЉРµРјРЅРѕСЃС‚Рё
-    stock.GetByW(12);  // Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹РґР°РЅР° РєРѕСЂРѕР±РєР° 2 (РІРµСЃ=15)
+    double height;
+    cout << "Введите высоту цилиндра: ";
+    cin >> height;
 
-    // РџРѕР»СѓС‡Р°РµРј РєРѕСЂРѕР±РєСѓ РїРѕ РјРёРЅРёРјР°Р»СЊРЅРѕРјСѓ РѕР±СЉРµРјСѓ
-    stock.GetByV(4);   // Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹РґР°РЅР° РєРѕСЂРѕР±РєР° 0 (РѕР±СЉРµРј=5)
+    double volume = circle.CalcArea() * height;
+    cout << "Объем цилиндра: " << volume << endl;
+}
+
+void Menu::task1_rectangle() {
+    cout << "\n--- Прямоугольник ---" << endl;
+    double width, height;
+    cout << "Введите ширину: ";
+    cin >> width;
+    cout << "Введите высоту: ";
+    cin >> height;
+
+    Rectangle rect(width, height);
+    rect.Show();
+
+    double cylinderHeight;
+    cout << "Введите высоту цилиндра: ";
+    cin >> cylinderHeight;
+
+    double volume = rect.CalcArea() * cylinderHeight;
+    cout << "Объем цилиндра: " << volume << endl;
+}
+
+// Задание 2: Иерархия животных
+void Menu::task2() {
+    while (true) {
+        cout << "\n=== Иерархия животных ===" << endl;
+        cout << "1. Раннее связывание" << endl;
+        cout << "2. Позднее связывание" << endl;
+        cout << "0. Назад" << endl;
+
+        int choice;
+        cout << "Ваш выбор: ";
+        cin >> choice;
+
+        if (choice == 0) break;
+
+        switch (choice) {
+        case 1: task2_early_binding(); break;
+        case 2: task2_late_binding(); break;
+        default: cout << "Ошибка выбора!" << endl;
+        }
+    }
+}
+
+void Menu::task2_early_binding() {
+    cout << "\n--- Раннее связывание ---" << endl;
+
+    Fish fish;
+    Bird bird;
+    FlyingBird flyingBird;
+
+    cout << "Рыба:" << endl;
+    fish.breathe();
+    fish.eat();
+    fish.swim();
+
+    cout << "\nПтица:" << endl;
+    bird.breathe();
+    bird.eat();
+    bird.lay_eggs();
+
+    cout << "\nЛетающая птица:" << endl;
+    flyingBird.breathe();
+    flyingBird.eat();
+    flyingBird.lay_eggs();
+    flyingBird.fly();
+}
+
+void Menu::task2_late_binding() {
+    cout << "\n--- Позднее связывание ---" << endl;
+
+    Animal* animals[3];
+    animals[0] = new Fish();
+    animals[1] = new Bird();
+    animals[2] = new FlyingBird();
+
+    for (int i = 0; i < 3; i++) {
+        animals[i]->breathe();
+        animals[i]->eat();
+        delete animals[i];
+    }
+}
+
+// Задание 3: Студенты и преподаватели
+void Menu::task3() {
+    cout << "\n=== Студенты и преподаватели ===" << endl;
+
+    // Создаем студентов
+    Student student1("Иван", "Иванов", "Иванович", { 4, 5, 3 });
+    Student student2("Петр", "Петров", "Петрович", { 5, 5, 5 });
+
+    // Создаем преподавателей
+    Teacher teacher1("Алексей", "Алексеев", "Алексеевич", Position::Docent, { "Математика" });
+    Teacher teacher2("Борис", "Борисов", "Борисович", Position::Professor, { "Информатика", "Программирование" });
+
+    // Выводим информацию
+    cout << "\nСтуденты:" << endl;
+    cout << student1.getShortStudentInfo() << endl;
+    cout << student2.getFullStudentInfo() << endl;
+
+    cout << "\nПреподаватели:" << endl;
+    cout << teacher1.getShortTeacherInfo() << endl;
+    cout << teacher2.getFullTeacherInfo() << endl;
+}
+
+// Задание 4: Сумматоры последовательностей
+void Menu::task4() {
+    cout << "\n=== Сумматоры последовательностей ===" << endl;
+
+    int N;
+    cout << "Введите число N: ";
+    cin >> N;
+
+    Summator basic;
+    SquareSummator squares;
+    CubeSummator cubes;
+
+    cout << "Сумма чисел: " << basic.sum(N) << endl;
+    cout << "Сумма квадратов: " << squares.sum(N) << endl;
+    cout << "Сумма кубов: " << cubes.sum(N) << endl;
 }

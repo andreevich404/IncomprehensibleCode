@@ -1,28 +1,33 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <iostream>
-#include <limits>
-#include "Bell.h"
-#include "OddEvenSeparator.h"
-#include "Table.h"
-#include "Complex.h"
-#include "Stock.h"
+#include <string>
+#include <vector>
+#include <functional>
 
 class Menu {
 public:
-    Menu();  // Конструктор
-
-    void ShowMenu(); // Метод для отображения меню
-    void RunTask(int choice); // Метод для выполнения выбранного задания
+    void initialize(); // ������������� ���� �������
+    void addItem(const std::string& name, std::function<void()> action);
+    void run();
 
 private:
-    void ClearConsole(); // Метод для очистки консоли
-    void TaskBell();     // Метод для работы с классом Bell
-    void TaskOddEvenSeparator(); // Метод для работы с классом OddEvenSeparator
-    void TaskTable();    // Метод для работы с классом Table
-    void TaskComplex();  // Метод для работы с классом Complex
-    void TaskStock();    // Метод для работы с классом Stock
+    struct MenuItem {
+        std::string name;
+        std::function<void()> action;
+    };
+
+    std::vector<MenuItem> items;
+
+    // ������� �������
+    void task1();
+    void task2();
+    void task3();
+    void task4();
+    void task1_circle();
+    void task1_rectangle();
+    void task2_early_binding();
+    void task2_late_binding();
 };
 
 #endif // MENU_H
