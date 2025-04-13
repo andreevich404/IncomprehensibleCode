@@ -1,220 +1,109 @@
 #include "Menu.h"
+#include "Complex.h"
+#include "Rational.h"
 #include <iostream>
-#include <vector>
-#include <cmath>
-#include "Circle.h"
-#include "Rectangle.h"
-#include "Fish.h"
-#include "Bird.h"
-#include "FlyingBird.h"
-#include "Student.h"
-#include "Teacher.h"
-#include "Summator.h"
-#include "SquareSummator.h"
-#include "CubeSummator.h"
+#include <limits>
+#include <cstdlib>
 
-using namespace std;
-
-// Инициализация меню с заданиями
-void Menu::initialize() {
-    // Добавляем все задания в меню
-    addItem("1. Геометрические фигуры", [this]() { task1(); });
-    addItem("2. Иерархия животных", [this]() { task2(); });
-    addItem("3. Студенты и преподаватели", [this]() { task3(); });
-    addItem("4. Сумматоры последовательностей", [this]() { task4(); });
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
 
-// Добавление пункта в меню
-void Menu::addItem(const string& name, function<void()> action) {
-    MenuItem item;
-    item.name = name;
-    item.action = action;
-    items.push_back(item);
-}
+void testComplexNumbers() {
+    clearScreen();
+    std::cout << "=== Complex Numbers ===" << std::endl;
 
-// Запуск меню
-void Menu::run() {
-    while (true) {
-        cout << "\n=== Главное меню ===" << endl;
+    Complex c1, c2;
 
-        // Выводим все пункты меню
-        for (size_t i = 0; i < items.size(); i++) {
-            cout << items[i].name << endl;
-        }
-        cout << "0. Выход" << endl;
+    std::cout << "Enter first complex number\n";
+    std::cin >> c1;
 
-        int choice;
-        cout << "Ваш выбор: ";
-        cin >> choice;
+    std::cout << "\nEnter second complex number\n";
+    std::cin >> c2;
 
-        if (choice == 0) {
-            break; // Выход из программы
-        }
+    std::cout << "\nYou entered:\n";
+    std::cout << "c1 = " << c1 << "\n";
+    std::cout << "c2 = " << c2 << "\n\n";
 
-        // Проверяем правильность выбора
-        if (choice > 0 && choice <= (int)items.size()) {
-            items[choice - 1].action(); // Запускаем выбранное задание
-        }
-        else {
-            cout << "Ошибка! Попробуйте снова." << endl;
-        }
+    std::cout << "c1 + c2 = " << (c1 + c2) << std::endl;
+    std::cout << "c1 - c2 = " << (c1 - c2) << std::endl;
+    std::cout << "c1 * c2 = " << (c1 * c2) << std::endl;
+
+    try {
+        std::cout << "c1 / c2 = " << (c1 / c2) << std::endl;
     }
+    catch (const std::exception& e) {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
+
+    std::cout << "\nPress Enter to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
-// Задание 1: Геометрические фигуры
-void Menu::task1() {
-    while (true) {
-        cout << "\n=== Геометрические фигуры ===" << endl;
-        cout << "1. Круг" << endl;
-        cout << "2. Прямоугольник" << endl;
-        cout << "0. Назад" << endl;
+void testRationalNumbers() {
+    clearScreen();
+    std::cout << "=== Rational Numbers ===" << std::endl;
 
-        int choice;
-        cout << "Выберите фигуру: ";
-        cin >> choice;
+    Rational r1, r2;
 
-        if (choice == 0) break;
+    std::cout << "Enter first rational number (a/b or a): ";
+    std::cin >> r1;
+
+    std::cout << "Enter second rational number (a/b or a): ";
+    std::cin >> r2;
+
+    std::cout << "\nYou entered:\n";
+    std::cout << "r1 = " << r1 << "\n";
+    std::cout << "r2 = " << r2 << "\n\n";
+
+    std::cout << "r1 + r2 = " << (r1 + r2) << std::endl;
+    std::cout << "r1 - r2 = " << (r1 - r2) << std::endl;
+    std::cout << "r1 * r2 = " << (r1 * r2) << std::endl;
+
+    try {
+        std::cout << "r1 / r2 = " << (r1 / r2) << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
+
+    std::cout << "\nPress Enter to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+}
+
+void showMenu() {
+    int choice;
+    do {
+        clearScreen();
+        std::cout << "=== Main Menu ===" << std::endl;
+        std::cout << "1. Complex" << std::endl;
+        std::cout << "2. Rational" << std::endl;
+        std::cout << "3. Exit" << std::endl;
+        std::cout << "Enter your choice (1-3): ";
+
+        while (!(std::cin >> choice) || choice < 1 || choice > 3) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter 1, 2 or 3: ";
+        }
 
         switch (choice) {
-        case 1: task1_circle(); break;
-        case 2: task1_rectangle(); break;
-        default: cout << "Ошибка выбора!" << endl;
+        case 1:
+            testComplexNumbers();
+            break;
+        case 2:
+            testRationalNumbers();
+            break;
+        case 3:
+            std::cout << "Exiting program..." << std::endl;
+            return;
         }
-    }
-}
 
-void Menu::task1_circle() {
-    cout << "\n--- Круг ---" << endl;
-    double radius;
-    cout << "Введите радиус: ";
-    cin >> radius;
-
-    Circle circle(radius);
-    circle.Show();
-
-    double height;
-    cout << "Введите высоту цилиндра: ";
-    cin >> height;
-
-    double volume = circle.CalcArea() * height;
-    cout << "Объем цилиндра: " << volume << endl;
-}
-
-void Menu::task1_rectangle() {
-    cout << "\n--- Прямоугольник ---" << endl;
-    double width, height;
-    cout << "Введите ширину: ";
-    cin >> width;
-    cout << "Введите высоту: ";
-    cin >> height;
-
-    Rectangle rect(width, height);
-    rect.Show();
-
-    double cylinderHeight;
-    cout << "Введите высоту цилиндра: ";
-    cin >> cylinderHeight;
-
-    double volume = rect.CalcArea() * cylinderHeight;
-    cout << "Объем цилиндра: " << volume << endl;
-}
-
-// Задание 2: Иерархия животных
-void Menu::task2() {
-    while (true) {
-        cout << "\n=== Иерархия животных ===" << endl;
-        cout << "1. Раннее связывание" << endl;
-        cout << "2. Позднее связывание" << endl;
-        cout << "0. Назад" << endl;
-
-        int choice;
-        cout << "Ваш выбор: ";
-        cin >> choice;
-
-        if (choice == 0) break;
-
-        switch (choice) {
-        case 1: task2_early_binding(); break;
-        case 2: task2_late_binding(); break;
-        default: cout << "Ошибка выбора!" << endl;
-        }
-    }
-}
-
-void Menu::task2_early_binding() {
-    cout << "\n--- Раннее связывание ---" << endl;
-
-    Fish fish;
-    Bird bird;
-    FlyingBird flyingBird;
-
-    cout << "Рыба:" << endl;
-    fish.breathe();
-    fish.eat();
-    fish.swim();
-
-    cout << "\nПтица:" << endl;
-    bird.breathe();
-    bird.eat();
-    bird.lay_eggs();
-
-    cout << "\nЛетающая птица:" << endl;
-    flyingBird.breathe();
-    flyingBird.eat();
-    flyingBird.lay_eggs();
-    flyingBird.fly();
-}
-
-void Menu::task2_late_binding() {
-    cout << "\n--- Позднее связывание ---" << endl;
-
-    Animal* animals[3];
-    animals[0] = new Fish();
-    animals[1] = new Bird();
-    animals[2] = new FlyingBird();
-
-    for (int i = 0; i < 3; i++) {
-        animals[i]->breathe();
-        animals[i]->eat();
-        delete animals[i];
-    }
-}
-
-// Задание 3: Студенты и преподаватели
-void Menu::task3() {
-    cout << "\n=== Студенты и преподаватели ===" << endl;
-
-    // Создаем студентов
-    Student student1("Иван", "Иванов", "Иванович", { 4, 5, 3 });
-    Student student2("Петр", "Петров", "Петрович", { 5, 5, 5 });
-
-    // Создаем преподавателей
-    Teacher teacher1("Алексей", "Алексеев", "Алексеевич", Position::Docent, { "Математика" });
-    Teacher teacher2("Борис", "Борисов", "Борисович", Position::Professor, { "Информатика", "Программирование" });
-
-    // Выводим информацию
-    cout << "\nСтуденты:" << endl;
-    cout << student1.getShortStudentInfo() << endl;
-    cout << student2.getFullStudentInfo() << endl;
-
-    cout << "\nПреподаватели:" << endl;
-    cout << teacher1.getShortTeacherInfo() << endl;
-    cout << teacher2.getFullTeacherInfo() << endl;
-}
-
-// Задание 4: Сумматоры последовательностей
-void Menu::task4() {
-    cout << "\n=== Сумматоры последовательностей ===" << endl;
-
-    int N;
-    cout << "Введите число N: ";
-    cin >> N;
-
-    Summator basic;
-    SquareSummator squares;
-    CubeSummator cubes;
-
-    cout << "Сумма чисел: " << basic.sum(N) << endl;
-    cout << "Сумма квадратов: " << squares.sum(N) << endl;
-    cout << "Сумма кубов: " << cubes.sum(N) << endl;
+    } while (choice != 3);
 }
