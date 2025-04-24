@@ -1,11 +1,20 @@
+#include "stdafx.h"
 #include "Menu.h"
-#include "Complex.h"
-#include "Rational.h"
-#include <iostream>
+#include "Contains.h"
+#include "Change.h"
+#include "Matrix.h"
+#include "Polynomial.h"
 #include <limits>
-#include <cstdlib>
+#include <cstdlib> // Для system()
 
-void clearScreen() {
+using namespace std;
+
+void LabMenu::clearInput() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void LabMenu::clearScreen() {
 #ifdef _WIN32
     system("cls");
 #else
@@ -13,97 +22,74 @@ void clearScreen() {
 #endif
 }
 
-void testComplexNumbers() {
-    clearScreen();
-    std::cout << "=== Complex Numbers ===" << std::endl;
-
-    Complex c1, c2;
-
-    std::cout << "Enter first complex number\n";
-    std::cin >> c1;
-
-    std::cout << "\nEnter second complex number\n";
-    std::cin >> c2;
-
-    std::cout << "\nYou entered:\n";
-    std::cout << "c1 = " << c1 << "\n";
-    std::cout << "c2 = " << c2 << "\n\n";
-
-    std::cout << "c1 + c2 = " << (c1 + c2) << std::endl;
-    std::cout << "c1 - c2 = " << (c1 - c2) << std::endl;
-    std::cout << "c1 * c2 = " << (c1 * c2) << std::endl;
-
-    try {
-        std::cout << "c1 / c2 = " << (c1 / c2) << std::endl;
-    }
-    catch (const std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
-    }
-
-    std::cout << "\nPress Enter to continue...";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cin.get();
-}
-
-void testRationalNumbers() {
-    clearScreen();
-    std::cout << "=== Rational Numbers ===" << std::endl;
-
-    Rational r1, r2;
-
-    std::cout << "Enter first rational number (a/b or a): ";
-    std::cin >> r1;
-
-    std::cout << "Enter second rational number (a/b or a): ";
-    std::cin >> r2;
-
-    std::cout << "\nYou entered:\n";
-    std::cout << "r1 = " << r1 << "\n";
-    std::cout << "r2 = " << r2 << "\n\n";
-
-    std::cout << "r1 + r2 = " << (r1 + r2) << std::endl;
-    std::cout << "r1 - r2 = " << (r1 - r2) << std::endl;
-    std::cout << "r1 * r2 = " << (r1 * r2) << std::endl;
-
-    try {
-        std::cout << "r1 / r2 = " << (r1 / r2) << std::endl;
-    }
-    catch (const std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
-    }
-
-    std::cout << "\nPress Enter to continue...";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cin.get();
-}
-
-void showMenu() {
-    int choice;
-    do {
-        clearScreen();
-        std::cout << "=== Main Menu ===" << std::endl;
-        std::cout << "1. Complex" << std::endl;
-        std::cout << "2. Rational" << std::endl;
-        std::cout << "3. Exit" << std::endl;
-        std::cout << "Enter your choice (1-3): ";
-
-        while (!(std::cin >> choice) || choice < 1 || choice > 3) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Invalid input. Please enter 1, 2 or 3: ";
+template <typename T>
+T LabMenu::getInput(const string& prompt) {
+    T value;
+    while (true) {
+        cout << prompt;
+        cin >> value;
+        if (cin.fail()) {
+            clearInput();
+            cout << "Ошибка ввода. Пожалуйста, введите корректное значение.\n";
         }
+        else {
+            clearInput();
+            return value;
+        }
+    }
+}
+
+void LabMenu::showMainMenu() {
+    clearScreen();
+    cout << "\n=== Лабораторная работа 5: ООП на С++ - шаблоны ===\n";
+    cout << "1. Задание 1: Шаблонная функция contains\n";
+    cout << "2. Задание 2: Шаблонная функция change\n";
+    cout << "3. Задание 3: Шаблонный класс Matrix\n";
+    cout << "4. Задание 4: Шаблонный класс Polynomial\n";
+    cout << "0. Выход\n";
+    cout << "Выберите задание: ";
+}
+
+void LabMenu::run() {
+    while (true) {
+        showMainMenu();
+        int choice = getInput<int>("");
 
         switch (choice) {
         case 1:
-            testComplexNumbers();
+            clearScreen();
+            demoContains();
+            cout << "\nНажмите Enter для продолжения...";
+            clearInput();
             break;
         case 2:
-            testRationalNumbers();
+            clearScreen();
+            demoChange();
+            cout << "\nНажмите Enter для продолжения...";
+            clearInput();
             break;
         case 3:
-            std::cout << "Exiting program..." << std::endl;
+            clearScreen();
+            demoMatrix();
+            cout << "\nНажмите Enter для продолжения...";
+            clearInput();
+            break;
+        case 4:
+            clearScreen();
+            demoPolynomial();
+            cout << "\nНажмите Enter для продолжения...";
+            clearInput();
+            break;
+        case 0:
             return;
+        default:
+            cout << "Неверный выбор. Попробуйте снова.\n";
+            clearInput();
         }
-
-    } while (choice != 3);
+    }
 }
+
+// Явные инстанциации шаблонного метода
+template int LabMenu::getInput<int>(const string&);
+template double LabMenu::getInput<double>(const string&);
+template string LabMenu::getInput<string>(const string&);

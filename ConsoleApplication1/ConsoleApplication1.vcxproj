@@ -119,7 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,15 +129,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Complex.cpp" />
+    <ClCompile Include="Change.cpp" />
+    <ClCompile Include="Contains.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Rational.cpp" />
+    <ClCompile Include="Polynomial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Complex.h" />
+    <ClInclude Include="Change.h" />
+    <ClInclude Include="Contains.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="Rational.h" />
+    <ClInclude Include="Polynomial.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,13 @@
-#ifndef MENU_H
-#define MENU_H
+#pragma once
+#include "stdafx.h"
 
-void showMenu();
-void testComplexNumbers();
-void testRationalNumbers();
+class LabMenu {
+public:
+    void run();
 
-#endif // MENU_H
+private:
+    void clearInput();
+    template <typename T> T getInput(const std::string& prompt);
+    void showMainMenu();
+    void clearScreen();
+};
