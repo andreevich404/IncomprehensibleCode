@@ -1,95 +1,83 @@
-#include "stdafx.h"
 #include "Menu.h"
-#include "Contains.h"
-#include "Change.h"
-#include "Matrix.h"
-#include "Polynomial.h"
-#include <limits>
-#include <cstdlib> // Для system()
+#include "Password.h"
+#include "MainHero.h"
+#include "BaseEnemy.h"
+#include "Weapon.h"
+#include "ExtraPasswordExceptions.h"
+#include "GameExceptions.h"
+#include <iostream>
 
 using namespace std;
 
-void LabMenu::clearInput() {
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-void LabMenu::clearScreen() {
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
-
-template <typename T>
-T LabMenu::getInput(const string& prompt) {
-    T value;
-    while (true) {
-        cout << prompt;
-        cin >> value;
-        if (cin.fail()) {
-            clearInput();
-            cout << "Ошибка ввода. Пожалуйста, введите корректное значение.\n";
-        }
-        else {
-            clearInput();
-            return value;
-        }
-    }
-}
-
-void LabMenu::showMainMenu() {
-    clearScreen();
-    cout << "\n=== Лабораторная работа 5: ООП на С++ - шаблоны ===\n";
-    cout << "1. Задание 1: Шаблонная функция contains\n";
-    cout << "2. Задание 2: Шаблонная функция change\n";
-    cout << "3. Задание 3: Шаблонный класс Matrix\n";
-    cout << "4. Задание 4: Шаблонный класс Polynomial\n";
-    cout << "0. Выход\n";
-    cout << "Выберите задание: ";
-}
-
-void LabMenu::run() {
-    while (true) {
-        showMainMenu();
-        int choice = getInput<int>("");
+void show_menu() {
+    int choice;
+    do {
+        cout << "\nМеню лабораторной работы №6:\n";
+        cout << "1. Проверка пароля с использованием исключений\n";
+        cout << "2. Демонстрация боя героя с врагами\n";
+        cout << "0. Выход\n";
+        cout << "Выберите пункт: ";
+        cin >> choice;
 
         switch (choice) {
         case 1:
-            clearScreen();
-            demoContains();
-            cout << "\nНажмите Enter для продолжения...";
-            clearInput();
+            run_lab1();
             break;
         case 2:
-            clearScreen();
-            demoChange();
-            cout << "\nНажмите Enter для продолжения...";
-            clearInput();
-            break;
-        case 3:
-            clearScreen();
-            demoMatrix();
-            cout << "\nНажмите Enter для продолжения...";
-            clearInput();
-            break;
-        case 4:
-            clearScreen();
-            demoPolynomial();
-            cout << "\nНажмите Enter для продолжения...";
-            clearInput();
+            run_lab2();
             break;
         case 0:
-            return;
+            cout << "Выход из программы.\n";
+            break;
         default:
-            cout << "Неверный выбор. Попробуйте снова.\n";
-            clearInput();
+            cout << "Некорректный выбор. Попробуйте снова.\n";
         }
+    } while (choice != 0);
+}
+
+void run_lab1() {
+    try {
+        string password = get_password();
+        cout << "Пароль принят: " << password << endl;
+    }
+    catch (const PasswordError& e) {
+        cerr << "Ошибка пароля: " << e.what() << endl;
+    }
+    catch (const ExtraPasswordError& e) {
+        cerr << "Дополнительная ошибка пароля: " << e.what() << endl;
     }
 }
 
-// Явные инстанциации шаблонного метода
-template int LabMenu::getInput<int>(const string&);
-template double LabMenu::getInput<double>(const string&);
-template string LabMenu::getInput<string>(const string&);
+
+void run_lab2() {
+    try {
+        MainHero hero(0, 0, "Иван", 150);
+
+        Weapon weapon1, weapon2;
+        cout << "Введите первое оружие:\n";
+        cin >> weapon1;
+        cout << "Введите второе оружие:\n";
+        cin >> weapon2;
+
+        hero.add_weapon(weapon1);
+        hero.add_weapon(weapon2);
+
+        BaseEnemy enemy1(5, 5, weapon1, 60);
+        BaseEnemy enemy2(10, 10, weapon2, 80);
+
+        cout << enemy1 << endl;
+        cout << enemy2 << endl;
+
+        hero.hit(enemy1);
+        hero.move(5, 5);
+        hero.hit(enemy1);
+
+        hero.next_weapon();
+        hero.hit(enemy2);
+
+        hero.heal(40);
+    }
+    catch (const GameError& e) {
+        cerr << "Игровая ошибка: " << e.what() << endl;
+    }
+}

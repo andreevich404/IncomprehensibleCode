@@ -129,20 +129,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Change.cpp" />
-    <ClCompile Include="Contains.cpp" />
+    <ClCompile Include="BaseCharacter.cpp" />
+    <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="MainHero.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Polynomial.cpp" />
+    <ClCompile Include="Password.cpp" />
+    <ClCompile Include="PasswordExceptions.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Change.h" />
-    <ClInclude Include="Contains.h" />
-    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="BaseCharacter.h" />
+    <ClInclude Include="BaseEnemy.h" />
+    <ClInclude Include="ExtraPasswordExceptions.h" />
+    <ClInclude Include="GameExceptions.h" />
+    <ClInclude Include="MainHero.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="Polynomial.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Password.h" />
+    <ClInclude Include="PasswordExceptions.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
