@@ -1,83 +1,75 @@
 #include "Menu.h"
-#include "Password.h"
-#include "MainHero.h"
-#include "BaseEnemy.h"
-#include "Weapon.h"
-#include "ExtraPasswordExceptions.h"
-#include "GameExceptions.h"
-#include <iostream>
+#include "PrintFunction.h"
+#include "AssociativeContainers.h"
+#include "Algorithms.h"
+#include "VectorTasks.h"
 
-using namespace std;
+void ShowMenu() {
+    std::cout << "Выберите задание для демонстрации:\n";
+    std::cout << "1. Печать элементов контейнера\n";
+    std::cout << "2. Проверка повторяющихся чисел\n";
+    std::cout << "3. Поиск общих букв в словах\n";
+    std::cout << "4. Подсчет повторений слов\n";
+    std::cout << "5. Дублирование элементов вектора\n";
+    std::cout << "6. Обработка положительных чисел\n";
+    std::cout << "7. Уникальные элементы\n";
+    std::cout << "8. Работа с вектором\n";
+    std::cout << "0. Выход\n";
+}
 
-void show_menu() {
-    int choice;
-    do {
-        cout << "\nМеню лабораторной работы №6:\n";
-        cout << "1. Проверка пароля с использованием исключений\n";
-        cout << "2. Демонстрация боя героя с врагами\n";
-        cout << "0. Выход\n";
-        cout << "Выберите пункт: ";
-        cin >> choice;
-
-        switch (choice) {
-        case 1:
-            run_lab1();
-            break;
-        case 2:
-            run_lab2();
-            break;
-        case 0:
-            cout << "Выход из программы.\n";
-            break;
-        default:
-            cout << "Некорректный выбор. Попробуйте снова.\n";
+void ExecuteTask(int choice) {
+    switch (choice) {
+    case 1: {
+        std::vector<int> data = { 1, 2, 3 };
+        Print(data, ", ");
+        break;
+    }
+    case 2: {
+        std::vector<int> numbers = { 1, 2, 1, 2, 2, 1, 6 };
+        CheckRepeatedNumbers(numbers);
+        break;
+    }
+    case 3: {
+        std::vector<std::string> words = { "apple", "peach" };
+        auto commonLetters = FindCommonLetters(words);
+        for (char c : commonLetters) {
+            std::cout << c;
         }
-    } while (choice != 0);
-}
-
-void run_lab1() {
-    try {
-        string password = get_password();
-        cout << "Пароль принят: " << password << endl;
+        std::cout << "\n";
+        break;
     }
-    catch (const PasswordError& e) {
-        cerr << "Ошибка пароля: " << e.what() << endl;
+    case 4: {
+        std::vector<std::string> words = { "copy", "delta", "copy", "copy", "delta", "paste", "paste", "beta", "paste" };
+        CountWordOccurrences(words);
+        break;
     }
-    catch (const ExtraPasswordError& e) {
-        cerr << "Дополнительная ошибка пароля: " << e.what() << endl;
+    case 5: {
+        std::vector<int> v = { 1, 2, 3 };
+        Duplicate(v);
+        Print(v, " ");
+        break;
     }
-}
-
-
-void run_lab2() {
-    try {
-        MainHero hero(0, 0, "Иван", 150);
-
-        Weapon weapon1, weapon2;
-        cout << "Введите первое оружие:\n";
-        cin >> weapon1;
-        cout << "Введите второе оружие:\n";
-        cin >> weapon2;
-
-        hero.add_weapon(weapon1);
-        hero.add_weapon(weapon2);
-
-        BaseEnemy enemy1(5, 5, weapon1, 60);
-        BaseEnemy enemy2(10, 10, weapon2, 80);
-
-        cout << enemy1 << endl;
-        cout << enemy2 << endl;
-
-        hero.hit(enemy1);
-        hero.move(5, 5);
-        hero.hit(enemy1);
-
-        hero.next_weapon();
-        hero.hit(enemy2);
-
-        hero.heal(40);
+    case 6: {
+        std::vector<int> data = { 1, -2, 3, -4, 5 };
+        Process(data);
+        break;
     }
-    catch (const GameError& e) {
-        cerr << "Игровая ошибка: " << e.what() << endl;
+    case 7: {
+        std::vector<int> v = { 1, 1, 2, 2, 3, 3 };
+        auto last = Unique(v.begin(), v.end());
+        v.erase(last, v.end());
+        Print(v, " ");
+        break;
+    }
+    case 8: {
+        std::vector<int> numbers = { 1, 2, 3, 4, 5, 2, 3 };
+        int n;
+        std::cout << "Введите число n: ";
+        std::cin >> n;
+        VectorTasks(numbers, n);
+        break;
+    }
+    default:
+        std::cout << "Неверный выбор.\n";
     }
 }

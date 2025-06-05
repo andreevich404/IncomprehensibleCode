@@ -1,5 +1,7 @@
 #pragma once
+#include <iostream>
+#include <vector>
+#include <string>
 
-void show_menu();
-void run_lab1();
-void run_lab2();
+void ShowMenu();
+void ExecuteTask(int choice);
